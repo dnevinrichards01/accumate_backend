@@ -30,7 +30,11 @@ SECRET_KEY = 'django-insecure-mc=#(8rmrx(7u-i+srkv87gqrixmu2x6!g-6pknd7!@bdq@p2a
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [".vercel.app"]
+ALLOWED_HOSTS = [
+    ".vercel.app", 
+    '127.0.0.1', 
+    'accumate-backend-env.eba-zmfi3fza.us-west-2.elasticbeanstalk.com'
+]
 #mb change this later
 
 REST_FRAMEWORK = {
@@ -59,7 +63,7 @@ INSTALLED_APPS = [
 
     'api',
     'rest_framework',
-    'corsheaders'
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -150,3 +154,4 @@ CORS_ALLOW_ALL_ORIGINS = True
 #mb change this eventually
 CORS_ALLOWS_CREDENTIALS = True
 #? 
+
