@@ -1,0 +1,13 @@
+{
+    "builds": [{
+        "src": "accumate_backend/wsgi.py",
+        "use": "@vercel/python",
+        "config": { "maxLambdaSize": "15mb", "runtime": "python3.13" }
+    }],
+    "routes": [
+        {
+            "src": "/(.*)",
+            "dest": "accumate_backend/wsgi.py"
+        }
+    ]
+}
