@@ -33,7 +33,7 @@ DEBUG = True
 ALLOWED_HOSTS = [
     ".vercel.app", 
     '127.0.0.1', 
-    'accumate-backend-env.eba-zmfi3fza.us-west-2.elasticbeanstalk.com'
+    'accumate-backend-env.eba-zmfi3fza.us-west-2.elasticbeanstalk.com','3.133.138.88'
 ]
 #mb change this later
 
