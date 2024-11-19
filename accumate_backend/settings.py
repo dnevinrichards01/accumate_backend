@@ -30,11 +30,7 @@ SECRET_KEY = 'django-insecure-mc=#(8rmrx(7u-i+srkv87gqrixmu2x6!g-6pknd7!@bdq@p2a
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [
-    ".vercel.app", 
-    '127.0.0.1', 
-    'accumate-backend-env.eba-zmfi3fza.us-west-2.elasticbeanstalk.com','3.133.138.88'
-]
+ALLOWED_HOSTS = ["*"]
 #mb change this later
 
 REST_FRAMEWORK = {
