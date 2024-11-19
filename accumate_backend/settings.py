@@ -26,7 +26,7 @@ environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
 
 SECRET_KEY = env("SECRET_KEY", default="change_me")  
 
-DEBUG = env("DEBUG", default=False)  
+DEBUG = env("DEBUG", default=True)  
 
 ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=["*"])
 
