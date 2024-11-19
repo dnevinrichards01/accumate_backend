@@ -13,7 +13,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 from pathlib import Path  
 import environ
 import os
-import timedelta 
+from datetime import timedelta
 
 env = environ.Env(  
     # set casting, default value  
