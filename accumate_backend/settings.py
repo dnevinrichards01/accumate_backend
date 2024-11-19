@@ -10,15 +10,27 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
-from pathlib import Path
-from datetime import timedelta
-from dotenv import load_dotenv
+from pathlib import Path  
+import environ
 import os
+import timedelta 
 
-load_dotenv()
+env = environ.Env(  
+    # set casting, default value  
+    DEBUG=(bool, False)  
+)  
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent  
+# Take environment variables from .env file  
+environ.Env.read_env(os.path.join(BASE_DIR, ".env"))  
+
+SECRET_KEY = env("SECRET_KEY", default="change_me")  
+
+DEBUG = env("DEBUG", default=False)  
+
+ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=["*"])
+
+
 
 
 # Quick-start development settings - unsuitable for production
@@ -64,6 +76,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -98,12 +111,18 @@ WSGI_APPLICATION = 'accumate_backend.wsgi.application'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    "default": env.db(default="sqlite:///db.sqlite3"),
 }
 
+
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+
+LOGGING = {  
+    "version": 1,  
+    "disable_existing_loggers": False,  
+    "handlers": {"console": {"class": "logging.StreamHandler"}},  
+    "loggers": {"": {"handlers": ["console"], "level": "DEBUG"}},  
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
@@ -139,7 +158,13 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https ://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = env.str("STATIC_URL", default="/static/")  
+STATIC_ROOT = env.str("STATIC_ROOT", default=BASE_DIR / "staticfiles")
+WHITENOISE_USE_FINDERS = True
+WHITENOISE_AUTOREFRESH = DEBUG
+
+MEDIA_ROOT = env("MEDIA_ROOT", default=BASE_DIR / "media")  
+MEDIA_URL = env("MEDIA_PATH", default="/media/")
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
