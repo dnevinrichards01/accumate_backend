@@ -112,9 +112,15 @@ WSGI_APPLICATION = 'accumate_backend.wsgi.application'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 DATABASES = {
-    "default": env.db(default="sqlite:///db.sqlite3"),
-    "host": env("VOLUMES_DATA_ROOT")
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+        "HOST": env("VOLUMES_DATA_ROOT")
+    }
 }
+#DATABASES = {
+#    "default": env.db(default="sqlite:///db.sqlite3"),
+#}
 
 
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
