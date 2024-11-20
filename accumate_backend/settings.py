@@ -113,6 +113,7 @@ WSGI_APPLICATION = 'accumate_backend.wsgi.application'
 
 DATABASES = {
     "default": env.db(default="sqlite:///db.sqlite3"),
+    "host": env("VOLUMES_DATA_ROOT")
 }
 
 
