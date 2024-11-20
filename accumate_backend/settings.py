@@ -110,12 +110,11 @@ WSGI_APPLICATION = 'accumate_backend.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
-
+DB_ROOT = env.str("VOLUMES_DATA_ROOT")
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-        "HOST": env("VOLUMES_DATA_ROOT")
+        'NAME': os.path.join(DB_ROOT, 'db.sqlite3'),
     }
 }
 #DATABASES = {
