@@ -14,6 +14,7 @@ from pathlib import Path
 import environ
 import os
 from datetime import timedelta
+import django_heroku
 
 env = environ.Env(  
     # set casting, default value  
@@ -161,7 +162,9 @@ USE_TZ = True
 # https ://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = env.str("STATIC_URL", default="/static/")  
-STATIC_ROOT = env.str("STATIC_ROOT", default=BASE_DIR / "staticfiles")
+STATIC_ROOT = env.str("STATIC_ROOT", default=os.path.join(BASE_DIR,"staticfiles"))
+django_heroku.settings(locals())
+
 WHITENOISE_USE_FINDERS = True
 WHITENOISE_AUTOREFRESH = DEBUG
 

@@ -3,8 +3,8 @@ from celery import Celery
 from kombu import Queue
 from .settings import REDIS_URL
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "project.settings")
-app = Celery("project")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "accumate_backend.settings")
+app = Celery("accumate_backend")
 app.autodiscover_tasks()
 app.conf.broker_url = REDIS_URL
 app.conf.result_backend = REDIS_URL
