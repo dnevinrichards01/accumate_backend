@@ -26,7 +26,7 @@ environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
 
 SECRET_KEY = env("SECRET_KEY", default="change_me")  
 
-DEBUG = env("DEBUG", default=False)  
+DEBUG = env("DEBUG", default=True)  
 
 ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=["*"])
 
@@ -36,11 +36,6 @@ ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=["*"])
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-mc=#(8rmrx(7u-i+srkv87gqrixmu2x6!g-6pknd7!@bdq@p2a'
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 #mb change this later
@@ -111,7 +106,14 @@ WSGI_APPLICATION = 'accumate_backend.wsgi.application'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 DATABASES = {
-    "default": env.db(default="sqlite:///db.sqlite3"),
+    "default": {
+        "ENGINE": "django.db.backends.postgresql_psycopg2",
+        "NAME": env("DB_NAME"),
+        "USER": env("DB_USER"),
+        "PASSWORD": env("DB_PASSWORD"),
+        "HOST": env("DB_HOST"),
+        "PORT": env("DB_PORT")        
+    }
 }
 
 
@@ -165,6 +167,8 @@ WHITENOISE_AUTOREFRESH = DEBUG
 
 MEDIA_ROOT = env("MEDIA_ROOT", default=BASE_DIR / "media")  
 MEDIA_URL = env("MEDIA_PATH", default="/media/")
+
+REDIS_URL = env("REDIS_URL", default=None)
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
