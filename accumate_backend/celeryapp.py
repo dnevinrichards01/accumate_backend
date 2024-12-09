@@ -11,7 +11,9 @@ import logging
 app = Celery("accumate_backend")
 app.autodiscover_tasks()
 app.conf.broker_url = REDIS_URL
+app.conf.broker_use_ssl = {'ssl_cert_reqs': ssl.CERT_NONE}
 app.conf.result_backend = REDIS_URL
+app.conf.result_backend_use_ssl = {'ssl_cert_reqs': ssl.CERT_NONE}
 app.conf.broker_connection_retry_on_startup = True
 app.conf.accept_content = ["application/json"]
 app.conf.task_serializer = "json"
