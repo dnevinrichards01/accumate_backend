@@ -15,13 +15,16 @@ import environ
 import os
 from datetime import timedelta
 import django_heroku
+import ssl
+import logging
 
 env = environ.Env(  
     # set casting, default value  
     DEBUG=(bool, False)  
 )  
 
-BASE_DIR = Path(__file__).resolve().parent.parent  
+#BASE_DIR = Path(__file__).resolve().parent.parent  
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Take environment variables from .env file  
 environ.Env.read_env(os.path.join(BASE_DIR, ".env"))  
 
@@ -32,14 +35,15 @@ DEBUG = env("DEBUG", default=True)
 ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=["*"])
 
 
+import logging
+
+logging.basicConfig(level=logging.DEBUG)
+
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
-
-ALLOWED_HOSTS = ["*"]
-#mb change this later
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
@@ -109,35 +113,51 @@ WSGI_APPLICATION = 'accumate_backend.wsgi.application'
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql_psycopg2",
-        "NAME": env("DB_NAME"),
-        "USER": env("DB_USER"),
-        "PASSWORD": env("DB_PASSWORD"),
-        "HOST": env("DB_HOST"),
-        "PORT": env("DB_PORT")        
+        "NAME": env.str("DB_NAME"),
+        "USER": env.str("DB_USER"),
+        "PASSWORD": env.str("DB_PASSWORD"),
+        "HOST": env.str("DB_HOST"),
+        "PORT": env.str("DB_PORT")        
     }
 }
+
 
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": os.environ.get('REDIS_URL'),
+        "LOCATION": env.str("REDIS_URL", default=None),
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
             "CONNECTION_POOL_KWARGS": {
-                "ssl_ca_certs": os.path.join(BASE_DIR, "redis.crt")#"/etc/ssl/certs/ca-certificates.crt"
+                "ssl_cert_reqs": "required",
+                "ssl_ca_certs": os.path.join(BASE_DIR, 'redis.pem'),
             },
-        }
+        },
     }
 }
 
 
+
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
-LOGGING = {  
-    "version": 1,  
-    "disable_existing_loggers": False,  
-    "handlers": {"console": {"class": "logging.StreamHandler"}},  
-    "loggers": {"": {"handlers": ["console"], "level": "DEBUG"}},  
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+        },
+    },
+    "loggers": {
+        "django_redis": {
+            "handlers": ["console"],
+            "level": "DEBUG",
+        },
+        "redis": {  # Optional: Debug logs from redis-py
+            "handlers": ["console"],
+            "level": "DEBUG",
+        },
+    },
 }
 
 # Password validation
@@ -174,17 +194,17 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https ://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = env.str("STATIC_URL", default="/static/")  
-STATIC_ROOT = env.str("STATIC_ROOT", default=os.path.join(BASE_DIR,"staticfiles"))
+STATIC_URL = env("STATIC_URL", default="/static/")  
+STATIC_ROOT = env("STATIC_ROOT", default=os.path.join(BASE_DIR,"staticfiles"))
 django_heroku.settings(locals())
 
 WHITENOISE_USE_FINDERS = True
 WHITENOISE_AUTOREFRESH = DEBUG
 
-MEDIA_ROOT = env("MEDIA_ROOT", default=BASE_DIR / "media")  
+MEDIA_ROOT = env("MEDIA_ROOT", default=os.path.join(BASE_DIR, "media"))
 MEDIA_URL = env("MEDIA_PATH", default="/media/")
 
-REDIS_URL = env("REDIS_URL", default=None)
+REDIS_URL = env.str("REDIS_URL", default=None)
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
