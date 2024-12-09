@@ -1,3 +1,3 @@
-release: chmod 777 redis.crt && python manage.py migrate
+release: chmod 777 redis.pem && python manage.py migrate
 web: gunicorn accumate_backend.wsgi --log-file -
 worker: celery -A accumate_backend.celeryapp:app worker --loglevel=DEBUG
