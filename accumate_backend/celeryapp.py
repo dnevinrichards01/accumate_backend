@@ -6,14 +6,15 @@ from .settings import REDIS_URL, BASE_DIR
 import ssl
 import logging
 
+REDIS_URL = REDIS_URL.split('?')[0] + '?ssl_cert_reqs=CERT_NONE'
 
 # Celery Configuration
 app = Celery("accumate_backend")
 app.autodiscover_tasks()
 app.conf.broker_url = REDIS_URL
-app.conf.broker_use_ssl = {'ssl_cert_reqs': ssl.CERT_NONE}
+app.conf.broker_use_ssl = {'ssl_cert_reqs': ssl.CERT_NONE} # doesn't work
 app.conf.result_backend = REDIS_URL
-app.conf.result_backend_use_ssl = {'ssl_cert_reqs': ssl.CERT_NONE}
+app.conf.result_backend_use_ssl = {'ssl_cert_reqs': ssl.CERT_NONE} # doesn't work
 app.conf.broker_connection_retry_on_startup = True
 app.conf.accept_content = ["application/json"]
 app.conf.task_serializer = "json"
