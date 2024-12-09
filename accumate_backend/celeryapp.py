@@ -7,36 +7,8 @@ import ssl
 import logging
 
 
-
-
-"""
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "accumate_backend.settings")
-app = Celery("accumate_backend",
-            broker=REDIS_URL,
-            broker_transport_options = {
-                'ssl': {
-                    'ssl_ca_certs': "/Users/nevinrichards/Downloads/accumate/accumate_backend/redis.pem", 
-                    'ssl_cert_reqs': ssl.CERT_REQUIRED
-                }
-            }
-            )
-"""
-# Create a strict SSL context
-ssl_context = ssl.create_default_context(cafile=os.path.join(BASE_DIR,"redis.pem"))
-ssl_context.check_hostname = True  # Verify the server hostname
-ssl_context.verify_mode = ssl.CERT_REQUIRED  # Enforce certificate verification
-
-
-
 # Celery Configuration
-app = Celery(
-    "accumate_backend",
-    broker=REDIS_URL,
-    broker_transport_options={
-        "ssl": ssl_context
-    }
-)
-
+app = Celery("accumate_backend")
 app.autodiscover_tasks()
 app.conf.broker_url = REDIS_URL
 app.conf.result_backend = REDIS_URL
